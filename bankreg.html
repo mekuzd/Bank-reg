@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <title>Document</title>
+    </head>
+    <style>
+        h1 {
+            text-align: center;
+            color: gold;
+        }
+
+        label {
+            font-size: 20px;
+            color: darkgrey;
+        }
+
+        body {
+            background-color: rgb(0, 0, 32);
+        }
+
+        form {
+            border-radius: 30px;
+            box-shadow: 3px 3px 0px 0px gold;
+
+        }
+
+        input {
+            border: 1px solid lightslategray !important;
+            background-color: lightslategrey !important;
+            border-radius: 30px !important;
+        }
+
+        select {
+            font-size: 20px !important;
+            border: 1px solid lightslategray !important;
+            background-color: lightslategrey !important;
+            border-radius: 30px !important;
+        }
+
+        button {
+            width: 150px !important;
+            border-radius: 0pc 0px 30px 10px !important;
+        }
+    </style>
+
+    <body>
+        <form action="" class=" w-50 mx-auto mt-5 p-4">
+            <h1>Bank Registration</h1>
+            <label for="">Account Name</label>
+            <input type="text" class="form-control text-dark " id="accName" />
+            <p id="AN"></p>
+            <br />
+            <div class="mt-3">
+                <label for="">Select Account type</label>
+                <select name="" id="accType" class="form-control text-dark ">
+                    <option value="current">current</option>
+                    <option value="Savings">Savings</option>
+                    <option value="Fixed Deposit">Fixed Deposit</option>
+                </select>
+            </div>
+            <br />
+            <button class="btn btn-outline-success" type="button" onclick="createAcc() ">
+                Register
+            </button>
+        </form>
+        <br> <br>
+        <h1>CUSTOMER'S INFO</h1>
+        <table class="table  table-borderless  w-50 mx-auto text-light">
+            <th>
+                <tr class="fs-3 fw-bold text-info">
+                    <td>S/N</td>
+                    <td>Account Name</td>
+                    <td> Account type</td>
+                    <td>Delete</td>
+                </tr>
+            </th>
+            <tbody id="panel">
+
+            </tbody>
+        </table>
+    </body>
+
+</html>
+
+<script>
+
+    store = []
+
+    // CREATED AN OBJECT THEN PUSHED INTO AN ARRAY ALSO CALLED THE ADDTOSCREEN FUNCTION , THEN STORED ARRAY IN LOCAL STORAGE 
+    // ADDTOSCREEN() IS CALLED TO DISPLAY WHATS IN STORE
+    function createAcc() {
+        let accname = document.getElementById("accName").value;
+        let acctype = document.getElementById("accType").value;
+
+        let contacts = {
+            accname, acctype
+        }
+
+        if (accname != '') {
+            store.push(contacts)
+            localStorage.setItem('newregistered', JSON.stringify(store))
+
+            addtoscreen()
+
+        }
+
+        // else if (contacts.accname == accname) {
+        //     document.getElementById('AN').innerText = 'acoount already exist'
+        // }
+        else {
+            document.getElementById('AN').innerText = 'input an account name'
+            document.getElementById('AN').style.color = 'white '
+        }
+
+    }
+
+    // WHILE MAPPING THROUGH THE ARRAY THE INDEX AND VALUE  OF THE OBJECT PUSHED INTO THE ARRAY IS RETURNED, 
+    // VALUE: WHICH IS THE OBJECT AS A WHOLE 
+    // INDEX: WAS USED TO REMOVE OBJECT FROM THE ARRAY
+    // EACH OBJECT VALUE WAS GOTTEN BY VALUE.INPUTVALUE AFTER MAPPING
+    // THE NULL STRING WAS USED TO CLEAR THE BROWSER BEFORE PROVIDING A NEW APPENDING DISPLAY OF THE OBJECTS 
+    // THE SERIAL NUMBER WAS GOTTEN BY THE INDEX+1. 
+
+    function addtoscreen() {
+        document.getElementById("panel").innerHTML = '';
+        store.map((value, index) => {
+            document.getElementById("panel").innerHTML += `
+    <tr>
+    <td> ${index + 1}  </td>
+    <td>${(value.accname).toUpperCase()}</td>
+    <td>${(value.acctype).toUpperCase()}</td>
+    <td> <button class ="btn btn-danger" onclick="removeitem(${index}) "> Remove </button> </td>
+    </tr>
+    `;
+
+        })
+
+
+    }
+
+    // THE ADDTOSCREEN FUNCTION HAD TO BE CALLED TO DISPLAY THE OBJECTS REMAINING  AFTER SPLICING
+    // OBJECTS IN ARRAY were deleted by the index number: IN ORDER TO REMOVE A SPECIFIC OBJECT ANYTIME THE REMOVE FUNCTION IS CALLED IN THE BUTTON
+    // STORE WAS REASSIGNED, THEREFORE THE STORE BECAME ARROFREGISTERED WHICH IS THE SPLICED ARRAY 
+    // OTHERWISE: A FOR LOOP CAN BE DONE AND THAT WAY, STORE WONT BE REASSIGNED,  ADDTOSCREEN() WONT BE CALLED
+    // NB:  IF STORE ISNT REASSIGNED ADDTOSCRRREN() WONT FUNCTION 
+
+    function removeitem(index) {
+        let registered = localStorage.getItem("newregistered")
+        let arrofregistered = JSON.parse(registered)
+        arrofregistered.splice(index, 1)
+        store = arrofregistered
+        addtoscreen()
+    }
+
+    // A FOR LOOP CAN BE USED T0 LOOP THROUGH THE ARRAY AND  GET THE VALUES STORED IN THE ARRAY, 
+    // THIS WAY STORE WONT BE REASSIGNED and addtoscreen() wont be called
+    //  OTHERWISE: THE STORE CAN BE ASSIGNED THE NEW STORED ARRAY
+    // THE STAYONSCREEN FUNCTION WAS SELF CALLED  TO REMAIN A DEFAULT ONLOAD OF THE BROWSER
+    // NB:  IF STORE ISNT REASSIGNED ADDTOSCRRREN() WONT FUNCTION
+
+    function stayonhomescreen() {
+        let splicedarray = localStorage.getItem("newregistered")
+        let arrofnewregistered = JSON.parse(splicedarray)
+        store = arrofnewregistered
+        addtoscreen()
+
+    }
+    stayonhomescreen()
+
+
+</script>
