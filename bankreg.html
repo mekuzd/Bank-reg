@@ -154,6 +154,7 @@
         let arrofregistered = JSON.parse(registered)
         arrofregistered.splice(index, 1)
         store = arrofregistered
+        localStorage.setItem('newregistered', arrofregistered)
         addtoscreen()
     }
 
